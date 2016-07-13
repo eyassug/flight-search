@@ -30,7 +30,6 @@ router.get('/airports', function (req, res, next) {
       }
       else res.status(500).end(error.toString());
   });
-  res.end('Lists all matching airports from the Flight API.');
 });
 
 router.get('/search', function (req, res, next) {
