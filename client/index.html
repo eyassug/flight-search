@@ -1,4 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="styles\bootstrap.min.css" />
+	<title>Flight Search</title>
 
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h1>Where do you want to go?</h1>
+		</div>
+		<div class="form">
+			<form role="form" class="form-inline" id="search-form">
+				<div class="form-group">
+					<label class="control-label">From</label>
+					<input type="text" class="form-control" placeholder="Eg. Sydney" name="from" id="txt-from">
+				</div>
+				<div class="form-group">
+					<label class="control-label">To</label>
+					<input type="text" class="form-control" placeholder="Eg. Heathrow" name="to" id="txt-to">
+				</div>
+				<div class="form-group">
+					<label class="control-label">Departure Date</label>
+					<input type="text" class="form-control" placeholder="YYYY-MM-DD" name="date" id="txt-date">
+				</div>
+				<div class="form-group">
+					<input type="submit" class="btn btn-primary" text="Search" />
+				</div>
+			</form>
+		</div>
+		<br />
+		<div id="search-results">
+			<h3>Search Results</h3>
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#day0" aria-controls="day0" role="tab" data-toggle="tab">Day 0</a></li>
+		    <li role="presentation"><a href="#day1" aria-controls="day1" role="tab" data-toggle="tab">Day 1</a></li>
+		    <li role="presentation"><a href="#day2" aria-controls="day2" role="tab" data-toggle="tab">Day 2</a></li>
+		    <li role="presentation"><a href="#day3" aria-controls="day3" role="tab" data-toggle="tab">Day 3</a></li>
+		    <li role="presentation"><a href="#day4" aria-controls="day4" role="tab" data-toggle="tab">Day 4</a></li>
+		  </ul>
+			<!-- Tab panes -->
+			  <div class="tab-content">
+			    <div role="tabpanel" class="tab-pane active" id="day0">
+						<table class="table table-striped table-bordered table-hover table-condensed table-responsive">
+							<thead>
+							<tr>
+								<th>Airline</th>
+								<th>Flight Number</th>
+								<th>Departure Airport</th>
+								<th>Arrival Airport</th>
+								<th>Departs At</th>
+								<th>Arrives At</th>
+								<th>Duration</th>
+								<th>Price</th>
+							</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Emirates</td>
+									<td>439</td>
+									<td>Batumi Arpt</td>
+									<td>Bergstrom Intl Arpt</td>
+									<td>3:00 AM</td>
+									<td>4:30 PM</td>
+									<td>1 hr 30 mins</td>
+									<td>150.00</td>
+								</tr>
+
+
+							</tbody>
+						</table>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="day1">...</div>
+			    <div role="tabpanel" class="tab-pane" id="day2">...</div>
+			    <div role="tabpanel" class="tab-pane" id="day3">...</div>
+			    <div role="tabpanel" class="tab-pane" id="day4">...</div>
+			  </div>
+		</div>
+
+	</div>
+	<hr />
+	<footer>
+		<div class="container">
+			<p>Eyassu Getachew Bulfeta (eyassug@gmail.com) <a href="https://github.com/eyassug">GitHub</a></p>
+		</div>
+	</footer>
+
+	<script type="text/javascript" src="scripts\jquery.min.js"></script>
+  <script type="text/javascript" src="scripts\bootstrap.min.js"></script>
+
+</body>
 </html>
