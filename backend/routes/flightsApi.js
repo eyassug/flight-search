@@ -4,13 +4,30 @@ var BASE_URL = 'http://node.locomote.com/code-task/';
 
 var FlightsApi = {
     getAllAirlines: function(callback) {
-        // gets a list of airlines from the flights API
-        callback(null, ['QF', 'ET', 'PanAm']);
+        var airlinesUrl = BASE_URL + 'airlines';
+        request(airlinesUrl, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                callback(null, JSON.parse(body));
+            } else {
+                if (error) {
+                    callback(error);
+                } else callback(body);
+            }
+        });
     },
 
     getAirports: function(query, callback) {
-        // gets a list of matching airports from the flights API
-        callback(null, ['Bole', 'Mekelle', 'Gondar']);
+        var airportsUrl = BASE_URL + 'airports?q=' + query;
+
+        request(airportsUrl, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                callback(null, JSON.parse(body));
+            } else {
+                if (error) {
+                    callback(error);
+                } else callback(body);
+            }
+        });
     },
 
     searchFlights: function (isoDate, origin, destination, callback) {
