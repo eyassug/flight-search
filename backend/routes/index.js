@@ -37,14 +37,20 @@ router.get('/search', function (req, res, next) {
     var origin = req.query.from;
     var destination = req.query.to;
     //TODO: Add request validation
-
-    locomote.searchFlights(date, origin, destination, function(error, data) {
-        if(!error) {
-            //var flights = JSON.parse(data);
-            res.end(JSON.stringify(data));
-        }
-        else res.status(500).end(error.toString());
-    });
+    if(!(date || origin || destination) || origin.length < 2 || destination.length < 2)
+        res.status(400).end('Invalid request!');
+    if(!date.match('^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$'))
+        res.status(400).end('Invalid date!');
+    else {
+        var parsedDate = new Date(Date.parse(date));
+        locomote.searchFlights(parsedDate, origin, destination, function(error, data) {
+            if(!error) {
+                //var flights = JSON.parse(data);
+                res.end(JSON.stringify(data));
+            }
+            else res.status(500).end(error.toString());
+        });
+    }
 });
 
 module.exports = router;
