@@ -36,7 +36,7 @@ var FlightsApi = {
            if(!error) {
 
                // perform searches asynchronously (grouped by date)
-               var dates = SearchHelper.getFiveDayRange(isoDate);
+               var dates = SearchHelper.getFiveDayRange(isoDate).map(function(date){return date.toISOString().slice(0,10);});
                var flightsByDate = dates.map(function (date) {
                    return function(handler) {
                        FlightsApi.getFlightsByDate(date, combinations, function (err, flightsByDate){
