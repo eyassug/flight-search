@@ -50,9 +50,10 @@ var FlightsApi = {
                // run searches asynchronously
                async.parallel(flightSearches, function(err, flights) {
                    if(!err) {
-                       console.log('Total requests: ' + combinations.length);
-                       console.log('Total flights: ' + flights.length);
-                       callback(null, flights);
+                       // Flatten array
+                       var searchResults = [].concat.apply([], flights);
+                       console.log('Total flights: ' + searchResults.length);
+                       callback(null, searchResults);
                    }
                    else callback(err);
                });
@@ -72,10 +73,7 @@ var FlightsApi = {
             }
         }, function(error, response, body) {
             if (!error && response.statusCode == 200) {
-                var flights = {
-                    date: isoDate,
-                    results: body
-                };
+                var flights = JSON.parse(body);
                 callback(null, flights);
             } else {
                 if (error) {
