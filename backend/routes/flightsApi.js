@@ -36,42 +36,56 @@ var FlightsApi = {
            if(!error) {
 
                // perform searches asynchronously (grouped by date)
-               var flightSearches = combinations.map(function(combo) {
+               var dates = SearchHelper.getFiveDayRange(isoDate);
+               var flightsByDate = dates.map(function (date) {
                    return function(handler) {
-                       FlightsApi.doSearch(combo.date, combo.airline, combo.origin, combo.destination, function(err, flights) {
-                           if(!err) {
-                               handler(null, flights);
+                       FlightsApi.getFlightsByDate(date, combinations, function (err, flightsByDate){
+                           if(!err){
+                               handler(null, flightsByDate);
                            }
                            else handler(err);
                        });
                    }
                });
-
-               // run searches asynchronously
-               async.parallel(flightSearches, function(err, flights) {
+               async.parallel(flightsByDate, function (err, flights) {
                    if(!err) {
-                       // Flatten array
-                       var searchResults = [].concat.apply([], flights);
-                       console.log('Total flights: ' + searchResults.length);
-                       callback(null, searchResults);
+                       callback(null, flights);
                    }
                    else callback(err);
-               });
+               })
+
            } else callback(error)
         });
     },
-
+    getFlightsByDate: function(date, combinations, callback){
+        var flightSearches = combinations.map(function(combo) {
+            return function(handler) {
+                FlightsApi.doSearch(date, combo.airline, combo.origin, combo.destination, function(err, flights) {
+                    if(!err) {
+                        handler(null, flights);
+                    }
+                    else handler(err);
+                });
+            }
+        });
+        // run searches asynchronously
+        async.parallel(flightSearches, function(err, flights) {
+            if(!err) {
+                // Flatten array
+                var searchResults = [].concat.apply([], flights);
+                callback(null, {
+                    date: date,
+                    flights: searchResults
+                });
+            }
+            else callback(err);
+        });
+    },
     doSearch: function(isoDate, airlineCode, originAirport, destinationAirport, callback) {
         var searchUrl = BASE_URL + 'flight_search';// + airlineCode;
-        console.log('Searching: '+ isoDate + airlineCode + originAirport + destinationAirport);
-        request({
-            url:searchUrl,
-            data: {
-                'date' : isoDate,
-                'from' : originAirport,
-                'to' : destinationAirport
-            }
-        }, function(error, response, body) {
+        var searchUrl = BASE_URL + 'flight_search/' + airlineCode;
+        searchUrl += '?date=' + isoDate + '&from=' + originAirport + '&to=' + destinationAirport;
+        request(searchUrl, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 var flights = JSON.parse(body);
                 callback(null, flights);
@@ -97,9 +111,7 @@ var SearchHelper = {
                                 var airlineCodes = allAirlines.map(function(airline) { return airline.code;});
                                 var originAirportCodes = originAirports.map(function(airport) {return airport.airportCode;});
                                 var destinationAirportCodes = destinationAirports.map(function(airport) {return airport.airportCode;});
-                                var dates = SearchHelper.getFiveDayRange(isoDate).map(function(date){return date.toISOString().slice(0,10);});
-                                // compute cartasian product of the values above
-                                var requestCombinations = SearchHelper.getCartasianProduct(dates, airlineCodes, originAirportCodes, destinationAirportCodes);
+                                var requestCombinations = SearchHelper.getCartasianProduct(airlineCodes, originAirportCodes, destinationAirportCodes);
                                 callback(null, requestCombinations);
                             }
                             else callback(error3);
@@ -121,15 +133,13 @@ var SearchHelper = {
         }
         return fiveDayRange;
     },
-    getCartasianProduct: function(dates, airlines, originAirports, destinationAirports) {
+    getCartasianProduct: function(airlines, originAirports, destinationAirports) {
         var cartasian = [];
-        dates.forEach(function(date){
-            airlines.forEach(function(airline) {
-                originAirports.forEach(function(origin){
-                    destinationAirports.forEach(function(destination) {
-                        var params = { date:date, airline : airline, origin : origin, destination : destination};
-                        cartasian.push(params);
-                    });
+        airlines.forEach(function(airline) {
+            originAirports.forEach(function(origin){
+                destinationAirports.forEach(function(destination) {
+                    var params = {airline : airline, origin : origin, destination : destination};
+                    cartasian.push(params);
                 });
             });
         });
