@@ -58,17 +58,6 @@
 							</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>Emirates</td>
-									<td>439</td>
-									<td>Batumi Arpt</td>
-									<td>Bergstrom Intl Arpt</td>
-									<td>3:00 AM</td>
-									<td>4:30 PM</td>
-									<td>1 hr 30 mins</td>
-									<td>150.00</td>
-								</tr>
-
 
 							</tbody>
 						</table>
@@ -153,6 +142,7 @@
 		</div>
 
 	</div>
+	<br /><br />
 	<hr />
 	<footer>
 		<div class="container">
@@ -166,7 +156,8 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-			
+			// Hide search results
+			$('#search-results').hide();
 			$('#btn-search').click(function(){
 				flightSearch.doSearch();
 			});
