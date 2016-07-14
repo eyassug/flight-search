@@ -5,6 +5,7 @@ var flightSearch = {
         var date = $('#txt-date').val();
         var from = $('#txt-from').val();
         var to = $('#txt-to').val();
+        flightSearch.hideResults();
         flightSearch.getFlights(date, from, to);
     },
     getFlights: function(date, from, to){
@@ -23,9 +24,9 @@ var flightSearch = {
                             row += '<td>' + flight.airline.name + '</td>';
                             row += '<td>' + flight.flightNum + '</td>';
                             row += '<td>' + flight.start.airportName + ', ' + flight.start.cityName + ', ' + flight.start.countryName + '</td>';
-                            row += '<td>' + new Date(flight.start.dateTime).toTimeString() + '</td>';
+                            row += '<td>' + new Date(flight.start.dateTime).toLocaleTimeString() + '</td>';
                             row += '<td>' + flight.finish.airportName + '</td>';
-                            row += '<td>' + new Date(flight.finish.dateTime).toTimeString() + '</td>';
+                            row += '<td>' + new Date(flight.finish.dateTime).toLocaleTimeString() + '</td>';
                             row += '<td>' + flight.durationMin + ' mins </td>';
                             row += '<td>' + flight.price + '</td>';
                             row += '</tr>';
@@ -33,12 +34,13 @@ var flightSearch = {
                         });
                         $(flightTable).html(content);
                     });
-                    
+                    $('#search-results').show();
                 },
-                error: function (err) {
-                    // Display error message
+                error: function (xhr, options, err) {
+                    alert('An error occured. Please try again later.')
                 }
             });
+
         }
         else {
             // Display error message
@@ -46,15 +48,19 @@ var flightSearch = {
 
     },
     validate: function(date, from, to){
-        //TODO:Add validation here
-        return true;
+        var iso = '^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$';
+        if((date && from && to) && from.length > 2 && to.length > 2){
+            if(date.match(iso)){
+                return true;
+            }
+            alert("Invalid date!");
+            return false;
+        }
+        alert('All fields are required. Date must be in the format YYYY-MM-DD!');
+        return false;
     },
     buildUrl : function (date, from, to) {
         return flightSearch.baseUrl + '?date=' + date +'&from=' + from + '&to=' + to;
-    },
-
-    clearResults : function() {
-
     },
     hideResults : function () {
         $('#search-results').hide();
