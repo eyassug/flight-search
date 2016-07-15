@@ -2,4 +2,13 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to Flight search
+
+  a(href='client.html') click here to open client for flight search
+
+  h2 endpoints
+  a(href='/airlines') /airlines
+  br
+  a(href='/airports?q=melbourne') /airlines?q=melbourne
+  br
+  a(href='/search?date=2016-09-02&from=Addis&to=melbourne') /search
